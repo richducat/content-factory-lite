@@ -1,0 +1,8 @@
+# Local secrets
+.env
+
+# Generated drafts
+output/
+
+# Node
+node_modules/

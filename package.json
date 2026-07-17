@@ -1,0 +1,23 @@
+{
+  "name": "content-factory-lite",
+  "version": "1.0.0",
+  "description": "Config-driven social content drafts (Instagram / TikTok / LinkedIn) from a single brand file. Open-source starter version of the Content Factory engine.",
+  "type": "module",
+  "main": "generate.mjs",
+  "scripts": {
+    "generate": "node generate.mjs",
+    "dry-run": "node generate.mjs --dry-run"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "social-media",
+    "content-generation",
+    "openai",
+    "marketing",
+    "automation"
+  ],
+  "author": "Richard Ducat (https://eb28.co)",
+  "license": "MIT"
+}

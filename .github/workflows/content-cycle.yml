@@ -1,0 +1,57 @@
+# OPTIONAL: scheduled content cycle via GitHub Actions.
+#
+# This workflow is entirely optional — the tool works fine run locally.
+# If you enable it:
+#   1. Add OPENAI_API_KEY as a repository secret
+#      (Settings -> Secrets and variables -> Actions).
+#   2. Adjust the cron below (times are UTC).
+#
+# Each run generates one day's drafts and uploads them as a build artifact
+# for you to download and review. Nothing is committed and nothing is
+# published to any social platform.
+
+name: content-cycle
+
+on:
+  schedule:
+    # 13:00 UTC daily — adjust to taste.
+    - cron: '0 13 * * *'
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Optional topic override (blank = rotating queue)'
+        required: false
+        default: ''
+
+permissions:
+  contents: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Zero dependencies — no npm install step needed.
+
+      - name: Generate drafts
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          # OPENAI_MODEL: gpt-4o-mini
+        run: |
+          if [ -n "${{ github.event.inputs.topic }}" ]; then
+            node generate.mjs --topic "${{ github.event.inputs.topic }}"
+          else
+            node generate.mjs
+          fi
+
+      - name: Upload drafts artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: content-drafts-${{ github.run_number }}
+          path: output/
+          retention-days: 14

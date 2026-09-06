@@ -41,10 +41,11 @@ jobs:
       - name: Generate drafts
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          TOPIC: ${{ github.event.inputs.topic || '' }}
           # OPENAI_MODEL: gpt-4o-mini
         run: |
-          if [ -n "${{ github.event.inputs.topic }}" ]; then
-            node generate.mjs --topic "${{ github.event.inputs.topic }}"
+          if [ -n "$TOPIC" ]; then
+            node generate.mjs --topic "$TOPIC"
           else
             node generate.mjs
           fi
